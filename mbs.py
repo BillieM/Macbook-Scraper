@@ -2,8 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import pickle
 from notify_run import Notify
+import os
 
-with open('macbooks', 'rb') as inFile:
+path = os.path.abspath(os.path.dirname(__file__))
+
+with open(f'{path}/macbooks', 'rb') as inFile:
     allItemsOld = pickle.load(inFile)
 
 mbPotential = []
@@ -29,7 +32,7 @@ for item in mbpItemsValid:
 
     strippedItem = item.find('span', class_ = 's-item__price').text.split(' ', 1)[0].lstrip('£').replace(',', '')
 
-    if float(strippedItem) < 625:
+    if float(strippedItem) < 650:
         mbPotential.append(item)
 
 ### macbook air scrape
@@ -103,5 +106,5 @@ for item in newItems:
     print(item)
     notify.send(item)
 
-with open('macbooks', 'wb') as outFile:
+with open(f'{path}/macbooks', 'wb') as outFile:
     pickle.dump(allItems, outFile)
