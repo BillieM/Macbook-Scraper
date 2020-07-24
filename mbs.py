@@ -13,13 +13,18 @@ mbPotential = []
 
 ### macbook pro scrape
 
-mbp = requests.get('https://www.ebay.co.uk/sch/i.html?_from=R40&_nkw=macbook+pro+2016&_sacat=0&LH_BIN=1&_sop=15&_ipg=200&rt=nc&LH_PrefLoc=1').text
+mbp2016 = requests.get('https://www.ebay.co.uk/sch/i.html?_from=R40&_nkw=macbook+pro+2016&_sacat=0&LH_BIN=1&_sop=15&_ipg=200&rt=nc&LH_PrefLoc=1').text
+mbp2016Soup = BeautifulSoup(mbp2016, 'html.parser')
+mbp2016Table = mbp2016Soup.find('ul', class_ = 'srp-results srp-list clearfix')
 
-mbpSoup = BeautifulSoup(mbp, 'html.parser')
+mbp2017 = requests.get('https://www.ebay.co.uk/sch/i.html?_from=R40&_nkw=macbook+pro+2017&_sacat=0&LH_BIN=1&_sop=15').text
+mbp2017Soup = BeautifulSoup(mbp2017, 'html.parser')
+mbp2017Table = mbp2017Soup.find('ul', class_ = 'srp-results srp-list clearfix')
 
-mbpTable = mbpSoup.find('ul', class_ = 'srp-results srp-list clearfix')
+mbpItemsAll = []
 
-mbpItemsAll = mbpTable.find_all('li')
+mbpItemsAll.extend(mbp2016Table.find_all('li'))
+mbpItemsAll.extend(mbp2017Table.find_all('li'))
 
 mbpItemsValid = []
 
@@ -104,7 +109,7 @@ notify = Notify()
 
 for item in newItems:
     print(item)
-    notify.send(item)
+    # notify.send(item)
 
 with open(f'{path}/macbooks', 'wb') as outFile:
     pickle.dump(allItems, outFile)
